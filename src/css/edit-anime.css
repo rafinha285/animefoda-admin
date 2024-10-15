@@ -1,0 +1,60 @@
+p{
+    margin-bottom:0!important;
+}
+select, input, option, textarea{
+    color: black;
+}
+.del{
+    background: var(--red) !important;
+}
+.del:hover{
+    background: red !important;
+}
+.button{
+    margin: 10px;
+    background: none;
+    border-radius: 5px;
+    border: white 1px solid;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.button:hover{
+    background: var(--dark);
+}
+.aniGen{
+    margin-top: 10px;
+    min-height: 20px;
+    border: 1px white solid;
+    border-radius: 5px;
+    padding: 10px;
+}
+.aniGenIn{
+    border: 1px white solid;
+    border-radius: 5px;
+    background: none;
+    width: calc(25% - 20px);
+    margin: 5px 10px !important;
+    padding: 10px;
+    display: inline-flex;
+    justify-content: space-between;
+    align-items: center;
+    word-break: break-all;
+}
+.aniGenIn:hover{
+    border: 1px rgb(209, 209, 209) solid;
+}
+.delGen{
+    background-color: rgb(126, 0, 0);
+    border:none;
+    border-radius: 5px;
+    float: right;
+    margin: 2px;
+}
+.delGen:hover{
+    background-color: rgb(70, 0, 0);
+}
+.values div{
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+

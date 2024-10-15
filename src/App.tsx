@@ -1,26 +1,23 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import {Route, BrowserRouter as Router, Routes} from "react-router-dom";
+import {GlobalProvider} from "./context/globalContext";
+import "./css/base.css"
+import Login from "./pages/Login";
+import Home from "./pages/Home";
+import EditAnime from "./pages/EditAnime";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    return (
+        <Router>
+            <GlobalProvider>
+                <Routes>
+                    <Route path='/' element={<Login/>}/>
+                    <Route path="/login" element={<Login/>}/>
+                    <Route path='/home' element={<Home/>}/>
+                    <Route path='/admin/:userId/edit/:aniId' element={<EditAnime/>}/>
+                </Routes>
+            </GlobalProvider>
+        </Router>
+    );
 }
 
 export default App;

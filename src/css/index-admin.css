@@ -1,0 +1,52 @@
+.adm-container {
+    display: flex;
+    justify-content: center;
+}
+.base-adm{
+    background: linear-gradient(90deg, var(--blue) 0, var(--dark_purple4) 100%);
+    margin: 10px 0;
+    padding: 10px;
+    border: 1px solid #949494;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    width: 70%;
+}
+
+.adm-ani{
+    border: 1px solid #949494;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    padding: 1em;
+    margin: 10px 0;
+    transition: .2s linear;
+    cursor: pointer;
+}
+.adm-ani p{
+    margin: 0;
+}
+.adm-ani:hover{
+    border: 1px solid #fff;
+    background: var(--light_blue2);
+}
+
+.adm-edit-container{
+    display: flex;
+    justify-content: center;
+}
+.adm-edit-content{
+    background: linear-gradient(90deg, var(--blue) 0, var(--dark_purple4) 100%);
+    padding: 3em;
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+}
+.adm-edit-img{
+    height: 400px;
+    overflow: auto hidden;
+    object-fit: contain;
+    border-radius: 10px;
+}
