@@ -13,7 +13,7 @@ import Footer from "../components/footer/Footer";
 import Loading from "../components/loading/Loading";
 import "../css/edit-anime.css"
 import InGenre from "../components/edit-anime/InGenre";
-import {fetchUser} from "../functions/userFunctions";
+import {fetchUser, userSendFile} from "../functions/userFunctions";
 import SeasonComponent from "../components/edit-anime/SeasonComponent";
 import {daysOfWeek} from "../functions/dateFunctions";
 
@@ -92,12 +92,14 @@ const EditAnime:React.FC = () => {
             reader.readAsDataURL(file);
         }
     }
-    const handleImgUpload = (e:React.MouseEvent<HTMLButtonElement>) =>{
+    const handleImgUpload = async (e:React.MouseEvent<HTMLButtonElement>) =>{
         e.preventDefault()
         const formData = new FormData()
+        console.log(imgRef)
         if(imgRef.current && imgRef.current.files && imgRef.current.files.length > 0){
             const selectedFile = imgRef.current.files[0];
             formData.append("file", selectedFile);
+            await userSendFile(`/ani/p/img/${aniId}`,formData)
         }
     }
 

@@ -18,7 +18,13 @@ export function checkIsLogged(isLogged:boolean){
 }
 
 export async function userSendFile(path:string,file:FormData){
+    let indentifier = getDeviceIndentifier()
     return await fetch(path,{
+        headers:{
+            'timeZone':indentifier.timeZone,
+            'webGlRenderer':indentifier.WegGl?.renderer,
+            'webGlVendor':indentifier.WegGl?.vendor,
+        },
         method:"POST",
         body:file,
     })
