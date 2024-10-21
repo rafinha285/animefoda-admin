@@ -1,6 +1,6 @@
-p{
-    margin-bottom:0!important;
-}
+/*p{*/
+/*    margin-bottom:0!important;*/
+/*}*/
 select, input, option, textarea{
     color: black;
 }
@@ -57,4 +57,13 @@ select, input, option, textarea{
     margin-top: 1em;
     margin-bottom: 1em;
 }
-
+.main-img{
+    border:1px solid white;
+    border-radius: 15px;
+    padding:10px;
+    margin: 10px;
+    width: 220px;
+}
+.main-img img{
+    width: 200px;
+}

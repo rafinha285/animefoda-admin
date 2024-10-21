@@ -4,6 +4,7 @@ import "./css/base.css"
 import Login from "./pages/Login";
 import Home from "./pages/Home";
 import EditAnime from "./pages/EditAnime";
+import NewAnime from "./pages/NewAnime";
 
 function App() {
     return (
@@ -13,7 +14,8 @@ function App() {
                     <Route path='/' element={<Login/>}/>
                     <Route path="/login" element={<Login/>}/>
                     <Route path='/home' element={<Home/>}/>
-                    <Route path='/admin/:userId/edit/:aniId' element={<EditAnime/>}/>
+                    <Route path='/admin/edit/:aniId' element={<EditAnime/>}/>
+                    <Route path='/admin/create/anime' element={<NewAnime/>}/>
                 </Routes>
             </GlobalProvider>
         </Router>

@@ -2,6 +2,8 @@ import React, {createContext, ReactNode, useEffect, useState} from "react";
 import {fetchUser, getPrivileges} from "../functions/userFunctions";
 import {roles} from "../types/types";
 import {baseUrl} from "../const";
+import {User} from "../types/userType";
+import {useCookies} from "react-cookie";
 
 // import jwt from 'jsonwebtoken';
 
@@ -9,6 +11,7 @@ export interface GlobalContextType {
     isLogged: boolean;
     isAdmin: boolean;
     isSuper: boolean;
+    user:User|undefined;
 }
 const GlobalContext = createContext<GlobalContextType | undefined>(undefined);
 
@@ -16,20 +19,26 @@ export const GlobalProvider:React.FC<{children:ReactNode}> = ({children}) =>{
     const [isLogged, setIsLogged] = useState<boolean>(false)
     const [isAdmin, setIsAdmin] = useState<boolean>(false)
     const [isSuper, setIsSuper] = useState<boolean>(false)
+    const [user,setUser] = useState<User>();
     const [loading, setLoading] = useState<boolean>(true);
-    // const [cookies] = useCookies();
+    const [token,setToken,deleteToken] = useCookies(["token"]);
     // const token = getCookie('token');
     useEffect(() => {
         const fetchTest = async() =>{
             try {
                 const userResponse = await fetchUser(`/user/g/verify`, "GET");
-                // console.log(userResponse)
+                console.log(userResponse)
                 const userData = await userResponse.json();
                 setIsLogged(userData.success);
 
                 let privilegesData = await getPrivileges()
                 setIsAdmin(privilegesData.role.includes(roles.adm));
                 setIsSuper(privilegesData.super);
+                await fetchUser(`/user/g/`,'GET')
+                    .then(response => response.json())
+                    .then((data:User)=>{
+                        setUser(data)
+                    })
             } catch (error) {
                 console.error("Erro ao buscar dados:", error);
             } finally {
@@ -45,7 +54,7 @@ export const GlobalProvider:React.FC<{children:ReactNode}> = ({children}) =>{
     }
 
     return(
-        <GlobalContext.Provider value={{isLogged,isAdmin,isSuper}}>
+        <GlobalContext.Provider value={{isLogged,isAdmin,isSuper,user}}>
             {children}
         </GlobalContext.Provider>
     )

@@ -41,7 +41,7 @@ const Header:FC = () =>{
     return (
         <header className="header">
             <nav>
-                <a href="/" style={{
+                <a href={isLogged?"/home":"/"} style={{
                     textDecoration: "none"
                 }}>
                     <h1 style={{
@@ -52,7 +52,7 @@ const Header:FC = () =>{
                     <div className="dropdown">
                         <li><a href="">Animes</a></li>
                         <div className="dropdown-content">
-                            <a href={"/create/anime"}>Adicionar anime</a>
+                            <a href={`/admin/create/anime`}>Adicionar anime</a>
                         </div>
                     </div>
                     <li><a href="">Mangá</a></li>

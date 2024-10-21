@@ -16,12 +16,20 @@ export function checkIsLogged(isLogged:boolean){
         window.location.href = '/login/'
     }
 }
-export async function fetchUser(path:string,method:"POST"|"DELETE"|"PATCH"|"GET" = "POST",body?:any){
+
+export async function userSendFile(path:string,file:FormData){
+    return await fetch(path,{
+        method:"POST",
+        body:file,
+    })
+}
+
+export async function fetchUser(path:string,method:"POST"|"DELETE"|"PATCH"|"GET" = "POST",body?:any,contentType:string = "application/json"){
     let indentifier = getDeviceIndentifier()
     return await fetch(path,{
         method,
         headers:{
-            'Content-Type':"application/json",
+            'Content-Type':contentType,
             'timeZone':indentifier.timeZone,
             'webGlRenderer':indentifier.WegGl?.renderer,
             'webGlVendor':indentifier.WegGl?.vendor,

@@ -15,6 +15,7 @@ import "../css/edit-anime.css"
 import InGenre from "../components/edit-anime/InGenre";
 import {fetchUser} from "../functions/userFunctions";
 import SeasonComponent from "../components/edit-anime/SeasonComponent";
+import {daysOfWeek} from "../functions/dateFunctions";
 
 const EditAnime:React.FC = () => {
     const {isLogged,isAdmin,isSuper} = useContext(globalContext)!;
@@ -31,10 +32,10 @@ const EditAnime:React.FC = () => {
     const [weekday,setWeekday] = useState<weekdayType|undefined>()
     const [visible,setVisible] = useState<boolean>()
 
-    const [producers,setProducers] = useState<string[]>()
-    const [creators,setCreators] = useState<string[]>()
-    const [studios,setStudios] = useState<string[]>()
-    const [seasons,setSeasons] = useState<Season[]>()
+    const [producers,setProducers] = useState<string[]>([])
+    const [creators,setCreators] = useState<string[]>([])
+    const [studios,setStudios] = useState<string[]>([])
+    const [seasons,setSeasons] = useState<Season[]>([])
 
 
     useEffect(()=>{
@@ -68,7 +69,7 @@ const EditAnime:React.FC = () => {
                     setStudios(r.studios);
                 })
         }
-        console.log(isLogged,isAdmin,isSuper)
+        // console.log(Date.prototype)
         // if(!isLogged){
         //     window.location.href = "/login"
         // }
@@ -165,11 +166,16 @@ const EditAnime:React.FC = () => {
         await fetchUser(`/ani/season/p/${aniId}`,"POST",{
             name: (document.getElementById("season_name") as HTMLInputElement).value,
             index: parseInt((document.getElementById("season_index") as HTMLInputElement).value),
+        }).then(async r=>{
+            const res = await r.json()
+            setSeasons([...seasons,res.season])
         })
     }
     const handleDeleteSeason = async(e:React.MouseEvent,id:string)=>{
         e.preventDefault()
-        await fetchUser(`/ani/season/delete/${id}`,"DELETE")
+        await fetchUser(`/ani/season/delete/${aniId}/${id}`,"DELETE").then(async r=>{
+            setSeasons(seasons!.filter(v=>v.id !== id))
+        })
     }
 
     const handleUpdate = async(e:React.MouseEvent)=>{
@@ -221,8 +227,8 @@ const EditAnime:React.FC = () => {
                                 </div>
                             </div>
                             <div style={{display: "flex", width: "100%",justifyContent: "space-evenly"}}>
-                                <button className='button'>Update <FontAwesomeIcon icon={faArrowUpFromBracket}/></button>
-                                <button className='button del'>Deletar Anime <FontAwesomeIcon icon={faTrash}/></button>
+                                <button onClick={handleUpdate} className='button'>Update <FontAwesomeIcon icon={faArrowUpFromBracket}/></button>
+                                <button onClick={openPopup} className='button del'>Deletar Anime <FontAwesomeIcon icon={faTrash}/></button>
                             </div>
                             <div className='values'>
                                 <div style={{display: "flex"}}>
@@ -259,9 +265,9 @@ const EditAnime:React.FC = () => {
                                 </div>
                                 {stateV === state.ONGOING?(
                                     <div>
-                                        <label>Dia de Lançamento da semana:</label>
+                                        <p>Dia de Lançamento da semana:</p>
                                         <select value={weekday} onChange={(e)=> setWeekday(e.target.value as weekdayType)}>
-                                            {Date.prototype.daysOfWeek().map((v,i)=>(
+                                            {daysOfWeek().map((v,i)=>(
                                                 <option value={v} key={i}>{v}</option>
                                             ))}
                                         </select>

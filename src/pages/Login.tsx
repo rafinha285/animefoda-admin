@@ -1,4 +1,4 @@
-import {FC, useState} from "react";
+import {FC, useContext, useEffect, useState} from "react";
 import Header from "../components/header/Header";
 import {getDeviceIndentifier} from "../functions/userFunctions";
 import {fetchPost} from "../functions/fetchFunctions";
@@ -9,8 +9,11 @@ import ReCAPTCHA from "react-google-recaptcha";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faRightToBracket} from "@fortawesome/free-solid-svg-icons";
 import "../css/login.css"
+import globalContext from "../context/globalContext";
+import {baseUrl} from "../const";
 
 const Login:FC = () => {
+    const context = useContext(globalContext)
     const [recaptchaValue,setRecaptchaValue] = useState<string|null>(null)
     const [password,setPassword] = useState<string>()
     const [email,setEmail] = useState<string>()
@@ -45,7 +48,7 @@ const Login:FC = () => {
                 // setCookie('token',token,{path:"/",maxAge:84600})
                 sessionStorage.setItem("token",token)
                 console.log(token)
-                window.location.href = "/"
+                window.location.href = "/home"
             }else{
                 alert('cu')
             }
@@ -67,6 +70,17 @@ const Login:FC = () => {
                 break
         }
     }
+
+    useEffect(()=>{
+        if(context?.isLogged&&!context?.isAdmin){
+            window.location.href = baseUrl
+        }
+        if(context?.isLogged){
+            window.location.href = "/home"
+        }
+    },[!context])
+
+
     return (
         <html lang="pt-BR">
             <Header></Header>
@@ -90,10 +104,9 @@ const Login:FC = () => {
                     flexDirection: "column",
                     margin: "0 auto"
                 }}>
-                    <button onClick={handleLogin} className="logBut">Entrar <FontAwesomeIcon icon={faRightToBracket}/>
-                    </button>
-                    <br/>
-                    <span>Criar conta:<Link to={"/register"}>Registrar-se</Link></span>
+                    <button onClick={handleLogin} className="logBut">Entrar <FontAwesomeIcon icon={faRightToBracket}/></button>
+                    {/*<br/>*/}
+                    {/*<span>Criar conta:<Link to={"/register"}>Registrar-se</Link></span>*/}
                 </div>
 
             </div>

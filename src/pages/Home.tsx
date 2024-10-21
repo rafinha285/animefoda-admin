@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import Header from "../components/header/Header";
 import Footer from '../components/footer/Footer';
 import {Anime} from "../types/Anime";
@@ -7,17 +7,18 @@ import {User} from "../types/userType";
 import {fetchUser} from "../functions/userFunctions";
 import "../css/index-admin.css"
 import {baseUrl} from "../const";
+import globalContext from "../context/globalContext";
 
 const Home:React.FC = () =>{
-    const [user,setUser] = useState<User>();
+    // const [user,setUser] = useState<User>();
     const [animes,setAnimes] = useState<Anime[]>([]);
     useEffect(()=>{
         const fetchData = async() =>{
-            await fetchUser(`/user/g/`,'GET')
-                .then(response => response.json())
-                .then((data:User)=>{
-                    setUser(data)
-                })
+            // await fetchUser(`/user/g/`,'GET')
+            //     .then(response => response.json())
+            //     .then((data:User)=>{
+            //         setUser(data)
+            //     })
             await fetch("/ani/g/all")
                 .then(response=>response.json())
                 .then((d: { success:boolean,animes:Anime[] })=>{
@@ -35,7 +36,7 @@ const Home:React.FC = () =>{
                     <h1>Animes</h1>
                     <div>
                         {animes.map((anime,index)=>(
-                            <IndexAdminAnime user_id={user?._id!} anime={anime} key={index}/>
+                            <IndexAdminAnime anime={anime} key={index}/>
                         ))}
                     </div>
                 </div>

@@ -28,9 +28,15 @@ interface propsC{
 const DeletePopup:React.FC<props>=({isOpen,onClose,typee,message})=>{
     const handleDeleteAnime = async()=>{
 
-        await fetchUser(`/ani/delete/${(message as Anime).id}`,'DELETE').then((res)=>{
+        await fetchUser(`/ani/delete/${(message as Anime).id}`,'DELETE').then(async (res)=>{
             console.log(res)
-            window.location.href = "/"
+            if(res.ok){
+                window.location.href = "/"
+            }else{
+                let ress = await res.json()
+                alert(ress.message)
+                onClose();
+            }
         })
     }
     const handleDeleteSeason = () =>{

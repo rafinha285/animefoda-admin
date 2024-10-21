@@ -39,3 +39,23 @@ export function DateToStringLocal(dat:Date){
     // Retorna a data formatada como uma string
     return `${day}/${month}/${year}`;
 }
+export function getDayOfWeekName(date:Date){
+    // const daysOfWeek = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
+    let daysOfWeekString = daysOfWeek()
+    const dayOfWeek = date.getDay(); // Retorna um número de 0 (Domingo) a 6 (Sábado)
+    return daysOfWeekString[dayOfWeek];
+}
+export function daysOfWeek (language:languages = languages.Portuguese) {
+    switch (language) {
+        case languages.Portuguese:
+            return ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
+        case languages.English:
+            return ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        case languages.Spanish:
+            return ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado']; // Dias da semana em espanhol
+        case languages.Japanese:
+            return ['日曜日', '月曜日', '火曜日', '水曜日', '木曜日', '金曜日', '土曜日']; // Dias da semana em japonês
+        default:
+            return ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado']; // Padrão para idioma português
+    }
+}
