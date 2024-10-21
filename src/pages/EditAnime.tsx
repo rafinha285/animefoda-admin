@@ -113,7 +113,7 @@ const EditAnime:React.FC = () => {
     };
 
     const sendProds = async(prodName:string,type:"producers"|"creators"|"studios") =>{
-        let res = await fetchUser(`/ani/p/add/prods/${aniId}/${type}/${prodName}`,"POST")
+        let res:string = await fetchUser(`/ani/p/add/prods/${aniId}/${type}/${prodName}`,"POST")
             .then(async(res)=> {
                 if(res.ok){
                     return (await res.json()).result[0].name;
@@ -137,11 +137,11 @@ const EditAnime:React.FC = () => {
                 break
             case "creators":
                 let crea = await sendProds(val,id)
-                setCreators(crea!)
+                setCreators([...creators,crea])
                 break
             case "studios":
                 let stud = await sendProds(val,id)
-                setStudios(stud!)
+                setStudios([...studios,stud])
                 break
         }
     }
