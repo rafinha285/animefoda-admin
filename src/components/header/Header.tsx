@@ -72,11 +72,7 @@ const Header:FC = () =>{
                         <Link to={'/user'}><i className="fa-solid fa-user"></i></Link>
                     ):(<Link to={"/login"}><i className="fa-solid fa-user"></i></Link>)}</li> */}
                     <li>{isLogged ? (
-                        window.location.pathname === "/user" ? (
-                            <button onClick={handleLogout}><FontAwesomeIcon icon={faRightFromBracket}/></button>
-                        ) : (
-                            <Link to={'/user'}><FontAwesomeIcon icon={faUser}/></Link>
-                        )
+                        <button onClick={handleLogout}><FontAwesomeIcon icon={faRightFromBracket}/></button>
                     ) : (
                         <Link to={"/login"}><FontAwesomeIcon icon={faUser}/></Link>
                     )}</li>
