@@ -11,6 +11,7 @@ import globalContext from "../context/globalContext";
 
 const Home:React.FC = () =>{
     // const [user,setUser] = useState<User>();
+    const context = useContext(globalContext);
     const [animes,setAnimes] = useState<Anime[]>([]);
     useEffect(()=>{
         const fetchData = async() =>{
@@ -26,8 +27,14 @@ const Home:React.FC = () =>{
                     setAnimes(d.animes);
                 })
         }
+        if(!context?.isAdmin){
+            window.location.href = baseUrl;
+        }
+        if(!context?.isLogged){
+            window.location.href = "/"
+        }
         fetchData()
-    },[])
+    },[!context]);
     return(
         <html>
             <Header/>
