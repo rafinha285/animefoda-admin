@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useContext, useEffect, useState} from "react";
+import React, {ChangeEvent, useContext, useEffect, useRef, useState} from "react";
 import { Helmet } from "react-helmet";
 import Header from "../components/header/Header";
 import {useParams} from "react-router-dom";
@@ -19,7 +19,7 @@ import {daysOfWeek} from "../functions/dateFunctions";
 
 const EditAnime:React.FC = () => {
     const {isLogged,isAdmin,isSuper} = useContext(globalContext)!;
-    const {id,aniId} = useParams();
+    const {aniId} = useParams();
     const [ani,setAni] = useState<Anime>();
     const [name,setName] = useState<string>();
     const [name2,setName2] = useState<string>()
@@ -37,6 +37,7 @@ const EditAnime:React.FC = () => {
     const [studios,setStudios] = useState<string[]>([])
     const [seasons,setSeasons] = useState<Season[]>([])
 
+    const imgRef = useRef<HTMLInputElement>(null)
 
     useEffect(()=>{
         const fetchAni = async()=>{
@@ -70,33 +71,32 @@ const EditAnime:React.FC = () => {
                 })
         }
         // console.log(Date.prototype)
-        // if(!isLogged){
-        //     window.location.href = "/login"
-        // }
-        // if(!isAdmin){
-        //     window.location.href = "/"
-        // }
+        if(!isLogged){
+            window.location.href = "/login"
+        }
+        if(!isAdmin){
+            window.location.href = baseUrl
+        }
         fetchAni()
     },[!ani])
 
     //handles
-    const [img,setImg]= useState<string>("")
+    // const [img,setImg]= useState<string>("")
     const handleImgChange = (e:ChangeEvent<HTMLInputElement>)=>{
         const file = e.target.files?.[0];
         if(file){
             const reader = new FileReader();
-            reader.onload = () =>{
-                setImg(reader.result as string)
-            }
+            // reader.onload = () =>{
+            //     setImg(reader.result as string)
+            // }
             reader.readAsDataURL(file);
         }
     }
     const handleImgUpload = (e:React.MouseEvent<HTMLButtonElement>) =>{
         e.preventDefault()
-        const inputElement = document.querySelector("#image") as HTMLInputElement;
         const formData = new FormData()
-        if(inputElement && inputElement.files && inputElement.files.length > 0){
-            const selectedFile = inputElement.files[0];
+        if(imgRef.current && imgRef.current.files && imgRef.current.files.length > 0){
+            const selectedFile = imgRef.current.files[0];
             formData.append("file", selectedFile);
         }
     }
@@ -220,7 +220,7 @@ const EditAnime:React.FC = () => {
                                     <img className='adm-edit-img' src={`${cdnUrl}/ani/img?Id=${aniId}`} alt={ani?.name}/>
                                 </div>
                                 <div style={{display: "flex", flexDirection: "column", height: "100%", justifyContent: "center"}}>
-                                    <input style={{color: "white"}} type="file" id="image" accept="image/* image/jpe"
+                                    <input style={{color: "white"}} type="file" ref={imgRef} accept="image/* image/jpe"
                                            onChange={handleImgChange}/>
                                     <button onClick={handleImgUpload} className="button">Upload Img <FontAwesomeIcon
                                         icon={faArrowUpFromBracket}></FontAwesomeIcon></button>
