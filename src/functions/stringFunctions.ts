@@ -25,3 +25,18 @@ export function getEpTime(ee:number):string{
     }
     return ar.join(":");
 }
+export function strTimetoSec(e:string):number{
+    var es = e.split(":")
+    if(es.length === 3){
+        var h = parseInt(es[0])*3600;
+        var m = parseInt(es[1])*60;
+        var s = parseInt(es[2])%60;
+        return h + m+s
+    }else if(es.length === 2){
+        var m = parseInt(es[0])*60;
+        var s = parseInt(es[1])%60;
+        return m+s
+    }else{
+        return 0
+    }
+}
