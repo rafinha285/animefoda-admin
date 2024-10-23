@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useRef, useState} from "react";
+import React, {ChangeEvent, useContext, useEffect, useRef, useState} from "react";
 import {Audio, Gens, qualityEnum, state} from "../types/types";
 import Header from "../components/header/Header";
 import Footer from "../components/footer/Footer";
@@ -7,8 +7,11 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faPlus, faUpload} from "@fortawesome/free-solid-svg-icons";
 import InGenre from "../components/edit-anime/InGenre";
 import {fetchUser, userSendFile} from "../functions/userFunctions";
+import GlobalContext from "../context/globalContext";
+import {baseUrl} from "../const";
 
 const NewAnime:React.FC = () =>{
+    const context = useContext(GlobalContext);
     const [name,setName] = useState<string>("");
     const [name2,setName2] = useState<string>("");
     const [description,setDescription] = useState<string>("");
@@ -77,6 +80,15 @@ const NewAnime:React.FC = () =>{
         })
     }
 
+
+    useEffect(()=>{
+        if(!context?.isAdmin){
+            window.location.href = baseUrl
+        }
+        if(!context?.isLogged){
+            window.location.href = "/";
+        }
+    },[!context])
 
     return (
         <html>

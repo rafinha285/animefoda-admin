@@ -75,12 +75,12 @@ const EditAnime:React.FC = () => {
                 })
         }
         // console.log(Date.prototype)
-        // if(!isLogged){
-        //     window.location.href = "/login"
-        // }
-        // if(!isAdmin){
-        //     window.location.href = baseUrl
-        // }
+        if(!isLogged){
+            window.location.href = "/login"
+        }
+        if(!isAdmin){
+            window.location.href = baseUrl
+        }
         fetchAni()
     },[!ani])
 

@@ -27,12 +27,12 @@ const Home:React.FC = () =>{
                     setAnimes(d.animes);
                 })
         }
-        // if(!context?.isAdmin){
-        //     window.location.href = baseUrl;
-        // }
-        // if(!context?.isLogged){
-        //     window.location.href = "/"
-        // }
+        if(!context?.isAdmin){
+            window.location.href = baseUrl;
+        }
+        if(!context?.isLogged){
+            window.location.href = "/"
+        }
         fetchData()
     },[!context]);
     return(
