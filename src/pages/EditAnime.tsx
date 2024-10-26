@@ -274,7 +274,7 @@ const EditAnime:React.FC = () => {
         if(epFileInputRef.current && epFileInputRef.current.files && epFileInputRef.current.files.length > 0){
             formData.append("file",epFileInputRef.current.files[0])
 
-            await userSendFile(`http://localhost:4444/new/ep/${ani?.id}`,formData)
+            await userSendFile(`http://localhost:4444/p/new/${ani?.id}`,formData)
         }else{
             alert("sem arquivo")
         }
@@ -314,7 +314,7 @@ const EditAnime:React.FC = () => {
                             <div className='values'>
                                 <div style={{display: "flex"}}>
                                     <p>Visible: </p>
-                                    <input type='radio' checked={visible} onChange={(e)=>setVisible(e.target.checked)}/>
+                                    <input type='checkbox' checked={visible} onChange={(e)=>setVisible(e.target.checked)}/>
                                 </div>
                                 <div>
                                     <p>Nome: </p>
