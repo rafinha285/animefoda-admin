@@ -64,6 +64,7 @@ const EditAnime:React.FC = () => {
             await fetch(`${baseUrl}/ani/g/seasons/${aniId}`)
                 .then(response=>response.json())
                 .then((s:Season[])=>{
+                    setEpSeason(s[0].id)
                     setSeasons(s);
                 })
             await fetch(`${baseUrl}/ani/g/prods/${aniId}`)
@@ -236,7 +237,7 @@ const EditAnime:React.FC = () => {
     const [epOpF,setEpOpF] = useState<string>("")
     const [epEd,setEpEd] = useState<string>("")
     const [epReleaseData,setEpReleaseData]= useState<Date>(new Date(Date.now()))
-    const [epSeason,setEpSeason] = useState<string>("")
+    const [epSeason,setEpSeason] = useState<string>(seasons[0]?.id||"")
     const [epReso,setEpReso] = useState<qualityEnum>(qualityEnum.FULLHD)
     const [epAudio,setEpAudio] = useState<languages[]>([languages.Japanese])
     const [epAudioTemp,setEpAudioTemp] = useState<languages>(languages.Japanese);
@@ -274,7 +275,7 @@ const EditAnime:React.FC = () => {
         if(epFileInputRef.current && epFileInputRef.current.files && epFileInputRef.current.files.length > 0){
             formData.append("file",epFileInputRef.current.files[0])
 
-            await userSendFile(`http://localhost:4444/p/new/${ani?.id}`,formData)
+            await userSendFile(`http://localhost:4444/new/${ani?.id}`,formData)
         }else{
             alert("sem arquivo")
         }
