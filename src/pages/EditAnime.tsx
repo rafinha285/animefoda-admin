@@ -64,7 +64,7 @@ const EditAnime:React.FC = () => {
             await fetch(`${baseUrl}/ani/g/seasons/${aniId}`)
                 .then(response=>response.json())
                 .then((s:Season[])=>{
-                    setEpSeason(s[0].id)
+                    setEpSeason(s[0]?.id)
                     setSeasons(s);
                 })
             await fetch(`${baseUrl}/ani/g/prods/${aniId}`)
