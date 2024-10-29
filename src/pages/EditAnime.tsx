@@ -275,7 +275,7 @@ const EditAnime:React.FC = () => {
         if(epFileInputRef.current && epFileInputRef.current.files && epFileInputRef.current.files.length > 0){
             formData.append("file",epFileInputRef.current.files[0])
 
-            await userSendFile(`http://localhost:4444/new/ep/${ani?.id}`,formData)
+            await userSendFile(`http://localhost:4444/new/${ani?.id}`,formData)
         }else{
             alert("sem arquivo")
         }
