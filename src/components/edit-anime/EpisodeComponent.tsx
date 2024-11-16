@@ -44,7 +44,7 @@ const EpisodeComponent:React.FC<props> = ({epId,seasonId,aniId,onDelete}) =>{
                     <p>id: {ep.id}</p>
                     <p>Legenda: {ep.subtitlestracks?.map((v, i) => (
                         <Link to={`/Anime/${ep.anime_id}/${ep.season_id}/${ep.id}/EditSubtitles/${v}`} key={i}>
-                            <button className="button" key={i}>{v},</button>
+                            <button className="button" key={i}>{v}</button>
                         </Link>
 
                     ))}</p>
