@@ -315,7 +315,7 @@ const EditAnime:React.FC = () => {
                             <div className='values'>
                                 <div style={{display: "flex"}}>
                                     <p>Visible: </p>
-                                    <input type='radio' checked={visible} onChange={(e)=>setVisible(e.target.checked)}/>
+                                    <input type='checkbox' checked={visible} onChange={(e)=>setVisible(e.target.checked)}/>
                                 </div>
                                 <div>
                                     <p>Nome: </p>
