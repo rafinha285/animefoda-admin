@@ -50,9 +50,9 @@ const EpisodeComponent:React.FC<props> = ({epId,seasonId,aniId,onDelete}) =>{
                     ))}</p>
                     <p>Nome: {ep.name}</p>
 
-                    <p>Opening Start: {ep.openingstart}</p>
-                    <p>Opening End: {ep.openingend}</p>
-                    <p>Ending: {ep.ending}</p>
+                    <p>Opening Start: {getEpTime(ep.openingstart)}</p>
+                    <p>Opening End: {getEpTime(ep.openingend)}</p>
+                    <p>Ending: {getEpTime(ep.ending)}</p>
                     <p>Duração: {getEpTime(ep.duration!)}</p>
                     <p>Audio: {ep.audiotracks.map((v, i) => (
                         <span key={i}>{v}</span>

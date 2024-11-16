@@ -439,7 +439,7 @@ const EditAnime:React.FC = () => {
                                         Adicionar <FontAwesomeIcon icon={faPlus}/>
                                     </button>
                                     <div className='aniGen'>
-                                        {seasons?.map((v,i)=>(
+                                        {seasons?.sort((a,b)=>a.index-b.index).map((v,i)=>(
                                             <SeasonComponent
                                                 id={v.id}
                                                 name={v.name}
