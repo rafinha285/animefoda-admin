@@ -22,12 +22,12 @@ interface propsC{
     typee:typesPopup,
     message?:string|Anime|Season,
     onClose:()=>void,
-    handleDeleteAnime?:()=>void,
-    handleDeleteSeason?:()=>void
+    handleDeleteAnime?:(e:React.MouseEvent)=>void,
+    handleDeleteSeason?:(e:React.MouseEvent)=>void
 }
 const DeletePopup:React.FC<props>=({isOpen,onClose,typee,message})=>{
-    const handleDeleteAnime = async()=>{
-
+    const handleDeleteAnime = async(e:React.MouseEvent)=>{
+        e.preventDefault()
         await fetchUser(`/ani/delete/${(message as Anime).id}`,'DELETE').then(async (res)=>{
             console.log(res)
             if(res.ok){
@@ -39,8 +39,8 @@ const DeletePopup:React.FC<props>=({isOpen,onClose,typee,message})=>{
             }
         })
     }
-    const handleDeleteSeason = () =>{
-
+    const handleDeleteSeason = (e:React.MouseEvent) =>{
+        e.preventDefault()
     }
     return(
         <Popup open={isOpen} closeOnDocumentClick onClose={onClose}>
