@@ -31,7 +31,7 @@ const Home:React.FC = () =>{
             window.location.href = baseUrl;
         }
         if(!context?.isLogged){
-            window.location.href = "/"
+            // window.location.href = "/"
         }
         fetchData()
     },[!context]);

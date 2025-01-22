@@ -55,6 +55,11 @@ const Header:FC = () =>{
                             <a href={`/admin/create/anime`}>Adicionar anime</a>
                         </div>
                     </div>
+                    <li>
+                        <a href={"/producers"}>
+                            Produtores
+                        </a>
+                    </li>
                     <li><a href="">Mangá</a></li>
                     <li>
                         <FontAwesomeIcon icon={faMagnifyingGlass} color={'white'} cursor={'pointer'}

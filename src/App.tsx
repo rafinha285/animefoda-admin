@@ -5,6 +5,7 @@ import Login from "./pages/Login";
 import Home from "./pages/Home";
 import EditAnime from "./pages/EditAnime";
 import NewAnime from "./pages/NewAnime";
+import SelectProducers from "./pages/SelectProducers";
 
 function App() {
     return (
@@ -16,6 +17,7 @@ function App() {
                     <Route path='/home' element={<Home/>}/>
                     <Route path='/admin/edit/:aniId' element={<EditAnime/>}/>
                     <Route path='/admin/create/anime' element={<NewAnime/>}/>
+                    <Route path='/producers' element={<SelectProducers/>}/>
                 </Routes>
             </GlobalProvider>
         </Router>
