@@ -1,4 +1,4 @@
-import { quality } from "./types";
+import {qualityEnum} from "./types";
 export enum languages{
     Japanese = 'ja',
     Portuguese = 'pt',
@@ -25,7 +25,7 @@ export interface Episode{
     audiotracks:languages[];
     subtitlestracks?:string[];
     season_id:string
-    resolution:string[]
+    resolution:string[]|qualityEnum;
     date_added:Date;
 }
 export interface EpisodeUser{

@@ -5,8 +5,8 @@ import {useParams} from "react-router-dom";
 import {Anime} from "../types/Anime";
 
 import {baseUrl, cdnUrl} from "../const";
-import {Audio, Gens, quality, qualityEnum, state, weekdayType} from "../types/types";
-import {faArrowUpFromBracket, faPlus, faTrash} from "@fortawesome/free-solid-svg-icons";
+import {Audio, Gens, languages, quality, qualityEnum, state, weekdayType} from "../types/types";
+import {faArrowUpFromBracket, faPlus, faTrash, faUpload} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import globalContext from "../context/globalContext";
 import DeletePopup, {typesPopup} from "../components/popup/deletePopup/DeletePopup";
@@ -17,10 +17,14 @@ import InGenre from "../components/edit-anime/InGenre";
 import {fetchUser, userSendFile} from "../functions/userFunctions";
 import SeasonComponent from "../components/edit-anime/SeasonComponent";
 import {daysOfWeek} from "../functions/dateFunctions";
+import {Episode} from "../types/Episode";
+import {strTimetoSec} from "../functions/stringFunctions";
 import {Season} from "../types/Season";
 
 const EditAnime:React.FC = () => {
     const {isLogged,isAdmin,isSuper} = useContext(globalContext)!;
+    const [isConverterOn,setIsConverterOn] = useState(false);
+
     const {aniId} = useParams();
     const [ani,setAni] = useState<Anime>();
     const [name,setName] = useState<string>();
@@ -203,6 +207,81 @@ const EditAnime:React.FC = () => {
         alert(`Anime updated successfully ${aniId}`)
     }
 
+    useEffect(()=>{
+        const checkConverter = async()=>{
+            const start = Date.now();
+            try{
+                const response = await fetch("http://localhost:4444/ping")
+                if (response.ok) {
+                    const duration = Date.now() - start; // Calcula o tempo total
+                    console.log(`Ping bem-sucedido: ${duration}ms`);
+                } else {
+                    console.log(`Falha no ping: HTTP status ${response.status}`);
+                }
+                setIsConverterOn(response.ok)
+                console.log(isConverterOn)
+            }catch (err){
+                console.error(err)
+            }
+        }
+        checkConverter()
+    },[!(document.readyState ===  "complete")])
+
+
+    //episodios
+
+    const epFileInputRef= useRef<HTMLInputElement>(null)
+
+    const [epName,setEpName] = useState<string>("")
+    const [epIndex,setEpIndex]= useState<number>(1)
+    const [epOpI,setEpOpI] = useState<string>("")
+    const [epOpF,setEpOpF] = useState<string>("")
+    const [epEd,setEpEd] = useState<string>("")
+    const [epReleaseData,setEpReleaseData]= useState<Date>(new Date(Date.now()))
+    const [epSeason,setEpSeason] = useState<string>("")
+    const [epReso,setEpReso] = useState<qualityEnum>(qualityEnum.FULLHD)
+    const [epAudio,setEpAudio] = useState<languages[]>([languages.Japanese])
+    const [epAudioTemp,setEpAudioTemp] = useState<languages>(languages.Japanese);
+
+    const secPointsAdd = (e:ChangeEvent<HTMLInputElement>,changeValue:React.Dispatch<React.SetStateAction<string>>) =>{
+        let value = e.target.value;
+        value = value.replace(/\D/g, '');
+        if (value.length > 2) {
+            value = `${value.slice(0, 2)}:${value.slice(2)}`;
+        }
+        if (value.length > 5) {
+            value = `${value.slice(0, 5)}:${value.slice(5)}`;
+        }
+        value = value.substring(0, 8);
+        changeValue(value)
+    }
+
+    const uploadEp =async (e:React.MouseEvent)=>{
+        e.preventDefault()
+        let ep ={
+            name:epName,
+            epindex:epIndex,
+            openingstart:strTimetoSec(epOpI),
+            openingend:strTimetoSec(epOpF),
+            ending:strTimetoSec(epEd),
+            releasedate:new Date(epReleaseData),
+            anime_id:ani?.id!,
+            audiotracks:epAudio,
+            season_id:epSeason,
+            resolution:epReso!,
+            date_added:new Date(Date.now())
+        }
+        var formData = new FormData()
+        formData.append("ep",JSON.stringify(ep))
+        if(epFileInputRef.current && epFileInputRef.current.files && epFileInputRef.current.files.length > 0){
+            formData.append("file",epFileInputRef.current.files[0])
+
+            await userSendFile(`http://localhost:4444/new/${ani?.id}`,formData)
+        }else{
+            alert("sem arquivo")
+        }
+    }
+
     return (
         <>
             {ani ? (
@@ -237,7 +316,7 @@ const EditAnime:React.FC = () => {
                             <div className='values'>
                                 <div style={{display: "flex"}}>
                                     <p>Visible: </p>
-                                    <input type='radio' checked={visible} onChange={(e)=>setVisible(e.target.checked)}/>
+                                    <input type='checkbox' checked={visible} onChange={(e)=>setVisible(e.target.checked)}/>
                                 </div>
                                 <div>
                                     <p>Nome: </p>
@@ -361,7 +440,7 @@ const EditAnime:React.FC = () => {
                                         Adicionar <FontAwesomeIcon icon={faPlus}/>
                                     </button>
                                     <div className='aniGen'>
-                                        {seasons?.map((v,i)=>(
+                                        {seasons?.sort((a,b)=>a.index-b.index).map((v,i)=>(
                                             <SeasonComponent
                                                 id={v.id}
                                                 name={v.name}
@@ -377,6 +456,103 @@ const EditAnime:React.FC = () => {
                                 <div>
                                    <button className='button' onClick={()=>window.location.href = `/admin/characters/${ani.id}`}>Personagens</button>
                                 </div>
+                                {isConverterOn&&(
+                                    <div>
+                                        <p><b>Adicionar Episódio: </b></p>
+                                        <div>
+                                            <p>Nome: </p>
+                                            <input value={epName}
+                                                   onChange={(e) => setEpName(e.target.value)}/>
+
+                                        </div>
+                                        <div>
+                                            <p>Index: </p>
+                                            <input type={'number'} value={epIndex}
+                                                   onChange={(e) => setEpIndex(parseInt(e.target.value))}/>
+                                        </div>
+                                        <div>
+                                            <p>Op Inicio: </p>
+                                            <input
+                                                placeholder="00:00:00"
+                                                value={epOpI}
+                                                onChange={(e) => secPointsAdd(e, setEpOpI)}
+                                            />
+                                        </div>
+                                        <div>
+                                            <p>Op fim: </p>
+                                            <input
+                                                placeholder="00:00:00"
+                                                value={epOpF}
+                                                onChange={(e) => secPointsAdd(e, setEpOpF)}
+                                            />
+                                        </div>
+                                        <div>
+                                            <p>Ending: </p>
+                                            <input
+                                                placeholder="00:00:00"
+                                                value={epEd}
+                                                onChange={(e) => secPointsAdd(e, setEpEd)}
+                                            />
+                                        </div>
+                                        <div>
+                                            <p>Data de lançamento: </p>
+                                            <input
+                                                type='date'
+                                                value={epReleaseData.toISOString().split('T')[0]}
+                                                onChange={(e) => setEpReleaseData(new Date(e.target.value))}
+                                            />
+                                        </div>
+                                        <div>
+                                            <p>Season: </p>
+                                            <select
+                                                value={epSeason}
+                                                onChange={(e) => setEpSeason(e.target.value)}
+                                            >
+                                                {seasons?.map((v, i) => (
+                                                    <option value={v.id} key={v.index}>{v.name}/{v.id}</option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <p>Maior resolução</p>
+                                            <select
+                                                value={epReso}
+                                                onChange={(e) => setEpReso(e.target.value as qualityEnum)}
+                                            >
+                                                {Object.values(qualityEnum).map((v, i) => (
+                                                    <option key={i} value={v}>{v}</option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <p>Audios: </p>
+                                            <select
+                                                value={epAudioTemp}
+                                                onChange={(e) => setEpAudioTemp(e.target.value as languages)}
+                                            >
+                                                {Object.keys(languages).map((v, i) => (
+                                                    <option value={v} key={i}>{v}</option>
+                                                ))}
+                                            </select>
+                                            <button className='button' onClick={() => {
+                                                setEpAudio([...epAudio, epAudioTemp])
+                                            }}>
+                                                Adicionar Lingua
+                                            </button>
+                                            <div>
+                                                {epAudio.map((v, i) => (
+                                                    <InGenre key={i} optionName={v} onDelete={() => {
+                                                        setEpAudio(epAudio.filter(va => va !== v))
+                                                    }}/>
+                                                ))}
+                                            </div>
+                                        </div>
+                                        <input ref={epFileInputRef} type="file" style={{color: "white"}}/>
+                                        <button className='button' onClick={uploadEp}>
+                                            Adicionar Episódio <FontAwesomeIcon icon={faUpload}/>
+                                        </button>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>

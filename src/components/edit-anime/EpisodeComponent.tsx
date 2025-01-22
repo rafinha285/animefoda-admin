@@ -44,15 +44,15 @@ const EpisodeComponent:React.FC<props> = ({epId,seasonId,aniId,onDelete}) =>{
                     <p>id: {ep.id}</p>
                     <p>Legenda: {ep.subtitlestracks?.map((v, i) => (
                         <Link to={`/Anime/${ep.anime_id}/${ep.season_id}/${ep.id}/EditSubtitles/${v}`} key={i}>
-                            <button className="button" key={i}>{v},</button>
+                            <button className="button" key={i}>{v}</button>
                         </Link>
 
                     ))}</p>
                     <p>Nome: {ep.name}</p>
 
-                    <p>Opening Start: {ep.openingstart}</p>
-                    <p>Opening End: {ep.openingend}</p>
-                    <p>Ending: {ep.ending}</p>
+                    <p>Opening Start: {getEpTime(ep.openingstart)}</p>
+                    <p>Opening End: {getEpTime(ep.openingend)}</p>
+                    <p>Ending: {getEpTime(ep.ending)}</p>
                     <p>Duração: {getEpTime(ep.duration!)}</p>
                     <p>Audio: {ep.audiotracks.map((v, i) => (
                         <span key={i}>{v}</span>

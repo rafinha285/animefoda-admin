@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useRef, useState} from "react";
+import React, {ChangeEvent, useContext, useEffect, useRef, useState} from "react";
 import {Audio, Gens, qualityEnum, state} from "../types/types";
 import Header from "../components/header/Header";
 import Footer from "../components/footer/Footer";
@@ -7,8 +7,11 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faPlus, faUpload} from "@fortawesome/free-solid-svg-icons";
 import InGenre from "../components/edit-anime/InGenre";
 import {fetchUser, userSendFile} from "../functions/userFunctions";
+import GlobalContext from "../context/globalContext";
+import {baseUrl} from "../const";
 
 const NewAnime:React.FC = () =>{
+    const context = useContext(GlobalContext);
     const [name,setName] = useState<string>("");
     const [name2,setName2] = useState<string>("");
     const [description,setDescription] = useState<string>("");
@@ -73,10 +76,19 @@ const NewAnime:React.FC = () =>{
                         await userSendFile(`/ani/p/img/${ani.id}`,formData);
                     }
                 }
-            }
+                }
         })
     }
 
+
+    useEffect(()=>{
+        if(!context?.isAdmin){
+            window.location.href = baseUrl
+        }
+        if(!context?.isLogged){
+            window.location.href = "/";
+        }
+    },[!context])
 
     return (
         <html>
@@ -97,23 +109,19 @@ const NewAnime:React.FC = () =>{
                         <button onClick={handleSubmit} className='button'>Adicionar anime <FontAwesomeIcon icon={faUpload}/></button>
                     </div>
                     <div className='values'>
-
                         <div>
                             <p>Nome: </p>
                             <input type='text' value={name} onChange={(e) => setName(e.target.value)}/>
                         </div>
-
                         <div>
                             <p>Nome alternativo: </p>
                             <input type='text' value={name2} onChange={(e) => setName2(e.target.value)}/>
                         </div>
-
                         <div>
                             <p>Descrição: </p>
                             <textarea value={description} onChange={(e) => setDescription(e.target.value)}
                                       style={{resize: "both", width: "100%"}} cols={30} rows={10}/>
                         </div>
-
                         <div>
                             <div style={{display: "flex", width: "100%", justifyContent: "space-between"}}>
                                 <p>Gêneros: </p>
@@ -136,7 +144,6 @@ const NewAnime:React.FC = () =>{
                                 ))}
                             </div>
                         </div>
-
                         <div>
                             <p>Data de lançamento: </p>
                             <input
@@ -146,7 +153,6 @@ const NewAnime:React.FC = () =>{
                                 onChange={(e) => setReleaseDate(new Date(e.target.value))}
                             />
                         </div>
-
                         <div>
                             <p>Qualidade: </p>
                             <select onChange={(e) => setQuality(e.target.value as qualityEnum)} value={qualityV}>
@@ -155,7 +161,6 @@ const NewAnime:React.FC = () =>{
                                 ))}
                             </select>
                         </div>
-
                         <div>
                             <p>Estado: </p>
                             <select onChange={(e) => setState(e.target.value as state)} value={stateV}>
@@ -164,7 +169,6 @@ const NewAnime:React.FC = () =>{
                                 ))}
                             </select>
                         </div>
-
                         <div>
                             <p>Idioma: </p>
                             <select value={language} onChange={(e)=>setLanguage(e.target.value as Audio)}>
@@ -173,7 +177,6 @@ const NewAnime:React.FC = () =>{
                                 ))}
                             </select>
                         </div>
-
                         <div>
                             <div style={{display: "flex", width: "100%", justifyContent: "space-between"}}>
                                 <p>Produtor: </p>
@@ -192,7 +195,6 @@ const NewAnime:React.FC = () =>{
                                 ))}
                             </div>
                         </div>
-
                         <div>
                             <div style={{display: "flex", width: "100%", justifyContent: "space-between"}}>
                                 <p>Estudios: </p>
@@ -211,7 +213,6 @@ const NewAnime:React.FC = () =>{
                                 ))}
                             </div>
                         </div>
-
                         <div>
                             <div style={{display: "flex", width: "100%", justifyContent: "space-between"}}>
                                 <p>Criadores: </p>
@@ -230,7 +231,6 @@ const NewAnime:React.FC = () =>{
                                 ))}
                             </div>
                         </div>
-
                         <div>
                             <p>Imagem cover</p>
                             <input ref={imgInputRef} type='file' style={{color:'white'}} accept="image/*" onChange={handleFileChange}/>
@@ -240,7 +240,6 @@ const NewAnime:React.FC = () =>{
                                 </div>
                             </>}
                         </div>
-
                     </div>
                 </div>
             </div>
