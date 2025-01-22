@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Episode} from "../../types/episodeModel";
+import {Episode} from "../../types/Episode";
 import {baseUrl} from "../../const";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faTrashCan} from "@fortawesome/free-solid-svg-icons";

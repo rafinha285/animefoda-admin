@@ -28,22 +28,6 @@ export interface Episode{
     resolution:string[]
     date_added:Date;
 }
-// export interface EpisodeDocument extends nano.DocumentGetResponse{
-//     _id:string
-//     index:number;
-//     name:string;
-//     animeId:string;
-//     releaseDate:Date;
-//     views:number;
-//     rating:number;
-//     duration:number;
-//     openingStart:number;
-//     openinigEnd:number;
-//     ending:number;
-//     audioTracks:AudioTracks[];
-//     subtitlesTracks:SubtitlesTracks[];
-//     resolution:quality;
-// }
 export interface EpisodeUser{
     episode_id:string;
     dropped_on:number;

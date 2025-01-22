@@ -2,7 +2,8 @@ import React, {ChangeEvent, useContext, useEffect, useRef, useState} from "react
 import { Helmet } from "react-helmet";
 import Header from "../components/header/Header";
 import {useParams} from "react-router-dom";
-import {Anime, Producer, Season} from "../types/Anime";
+import {Anime} from "../types/Anime";
+
 import {baseUrl, cdnUrl} from "../const";
 import {Audio, Gens, quality, qualityEnum, state, weekdayType} from "../types/types";
 import {faArrowUpFromBracket, faPlus, faTrash} from "@fortawesome/free-solid-svg-icons";
@@ -16,6 +17,7 @@ import InGenre from "../components/edit-anime/InGenre";
 import {fetchUser, userSendFile} from "../functions/userFunctions";
 import SeasonComponent from "../components/edit-anime/SeasonComponent";
 import {daysOfWeek} from "../functions/dateFunctions";
+import {Season} from "../types/Season";
 
 const EditAnime:React.FC = () => {
     const {isLogged,isAdmin,isSuper} = useContext(globalContext)!;
@@ -371,6 +373,9 @@ const EditAnime:React.FC = () => {
                                             />
                                         ))}
                                     </div>
+                                </div>
+                                <div>
+                                   <button className='button' onClick={()=>window.location.href = `/admin/characters/${ani.id}`}>Personagens</button>
                                 </div>
                             </div>
                         </div>

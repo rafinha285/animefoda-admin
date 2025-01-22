@@ -2,7 +2,7 @@ import React, {createContext, ReactNode, useEffect, useState} from "react";
 import {fetchUser, getPrivileges} from "../functions/userFunctions";
 import {roles} from "../types/types";
 import {baseUrl} from "../const";
-import {User} from "../types/userType";
+import {User} from "../types/User";
 import {useCookies} from "react-cookie";
 
 // import jwt from 'jsonwebtoken';

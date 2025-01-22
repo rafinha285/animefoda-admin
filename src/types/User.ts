@@ -1,7 +1,7 @@
 import { AnimeUser } from "./Anime"
 import { MangaUser } from "./mangaType";
 import { priorityValue, roles, userAnimeState } from "./types";
-import { EpisodeUser } from "./episodeModel";
+import { EpisodeUser } from "./Episode";
 
 interface GoogleLogin{
     idToken:string;

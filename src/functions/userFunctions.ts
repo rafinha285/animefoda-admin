@@ -1,4 +1,4 @@
-import {Episode} from "../types/episodeModel";
+import {Episode} from "../types/Episode";
 import {GlobalContextType} from "../context/globalContext";
 import {roles} from "../types/types";
 interface getPrivilegesInterface{

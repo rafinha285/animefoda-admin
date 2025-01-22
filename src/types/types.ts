@@ -107,3 +107,8 @@ export const Gens:string[] = [
     'Yaoi',
     'Yuri',
 ];
+
+export interface Producer{
+    id:string;
+    name:string;
+}
