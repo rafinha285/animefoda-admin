@@ -3,8 +3,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import Popup from "reactjs-popup";
 import "./css/popup.css"
-import { Anime, Season } from "../../../types/Anime";
+import { Anime } from "../../../types/Anime";
 import {fetchUser} from "../../../functions/userFunctions";
+import {Season} from "../../../types/Season";
 
 export enum typesPopup{
     delete,

@@ -3,7 +3,7 @@ import Header from "../components/header/Header";
 import Footer from '../components/footer/Footer';
 import {Anime} from "../types/Anime";
 import IndexAdminAnime from "../components/index/IndexAdminAnime";
-import {User} from "../types/userType";
+import {User} from "../types/User";
 import {fetchUser} from "../functions/userFunctions";
 import "../css/index-admin.css"
 import {baseUrl} from "../const";
