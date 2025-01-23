@@ -1,5 +1,5 @@
 import React, {ChangeEvent, useContext, useEffect, useRef, useState} from "react";
-import { Helmet } from "react-helmet";
+import {Helmet} from "react-helmet";
 import Header from "../components/header/Header";
 import {useParams} from "react-router-dom";
 import {Anime} from "../types/Anime";
@@ -17,9 +17,9 @@ import InGenre from "../components/edit-anime/InGenre";
 import {fetchUser, userSendFile} from "../functions/userFunctions";
 import SeasonComponent from "../components/edit-anime/SeasonComponent";
 import {daysOfWeek} from "../functions/dateFunctions";
-import {Episode} from "../types/Episode";
 import {strTimetoSec} from "../functions/stringFunctions";
 import {Season} from "../types/Season";
+import UploadButton, {UploadButtonType} from "../components/buttons/UploadButton";
 
 const EditAnime:React.FC = () => {
     const {isLogged,isAdmin,isSuper} = useContext(globalContext)!;
@@ -305,8 +305,9 @@ const EditAnime:React.FC = () => {
                                 <div style={{display: "flex", flexDirection: "column", height: "100%", justifyContent: "center"}}>
                                     <input style={{color: "white"}} type="file" ref={imgRef} accept="image/* image/jpe"
                                            onChange={handleImgChange}/>
-                                    <button onClick={handleImgUpload} className="button">Upload Img <FontAwesomeIcon
-                                        icon={faArrowUpFromBracket}></FontAwesomeIcon></button>
+                                    {/*<button onClick={handleImgUpload} className="button">Upload Img <FontAwesomeIcon*/}
+                                    {/*    icon={faArrowUpFromBracket}></FontAwesomeIcon></button>*/}
+                                    <UploadButton type={UploadButtonType.img} handle={handleImgUpload}/>
                                 </div>
                             </div>
                             <div style={{display: "flex", width: "100%",justifyContent: "space-evenly"}}>
