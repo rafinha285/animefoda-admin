@@ -13,24 +13,13 @@ interface CharacterProps {
 }
 
 const CharacterComponent:React.FC<CharacterProps> =({character,deleteCharacter,updateCharacter}) =>{
-    const [hasImg, setHasImg] = useState<boolean>(false)
     const [name,setName] = useState<string>(character.name)
     const [role,setRole] = useState<string>(character.role)
 
     const imgRef = useRef<HTMLInputElement>(null);
 
-    useEffect(()=>{
-        const checkImg = async()=>{
-            const img = await fetch(`${cdnUrl}/character/img/${character.anime_id}/${character.id}`)
-            console.log(img.ok)
-            setHasImg(img.ok)
-        }
-        checkImg()
-    },[])
-
     const uploadImg = async(e:React.MouseEvent<HTMLButtonElement>)=>{
         e.preventDefault()
-        //todo fazer o request para mandar a imagem do personagem para o servidor
         const formData = new FormData();
         if(imgRef.current&&imgRef.current.files&&imgRef.current.files.length>0){
             const selectedFile = imgRef.current.files[0];
