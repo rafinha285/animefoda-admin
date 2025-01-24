@@ -4,7 +4,7 @@ import {cdnUrl} from "../../const";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faTrash, faUpload} from "@fortawesome/free-solid-svg-icons";
 import UploadButton, {UploadButtonType} from "../buttons/UploadButton";
-import {fetchUser} from "../../functions/userFunctions";
+import {fetchUser, userSendFile} from "../../functions/userFunctions";
 
 interface CharacterProps {
     character: Character
@@ -31,7 +31,12 @@ const CharacterComponent:React.FC<CharacterProps> =({character,deleteCharacter,u
     const uploadImg = async(e:React.MouseEvent<HTMLButtonElement>)=>{
         e.preventDefault()
         //todo fazer o request para mandar a imagem do personagem para o servidor
-        await fetchUser("")
+        const formData = new FormData();
+        if(imgRef.current&&imgRef.current.files&&imgRef.current.files.length>0){
+            const selectedFile = imgRef.current.files[0];
+            formData.append('file', selectedFile);
+            await userSendFile(`/char/p/img/${character.anime_id}/${character.id}`, formData);
+        }
     }
 
     return(
@@ -39,7 +44,8 @@ const CharacterComponent:React.FC<CharacterProps> =({character,deleteCharacter,u
             <button className='delGen' onClick={(e)=>deleteCharacter(e,character)}><FontAwesomeIcon icon={faTrash}/></button>
             <p>Id:{character.id}</p>
             <div>
-                <p>Alterar imagem</p>
+                {/*<p>Alterar imagem</p>*/}
+                <img className='adm-edit-img' alt={character.name} src={`${cdnUrl}/character/img/${character.anime_id}/${character.id}`}/><br/>
                 <input
                     type='file'
                     accept="image/*"
@@ -51,7 +57,6 @@ const CharacterComponent:React.FC<CharacterProps> =({character,deleteCharacter,u
                 {/*    <FontAwesomeIcon icon={faArrowUpFromBracket}/>*/}
                 {/*</button>*/}
                 <UploadButton type={UploadButtonType.img} handle={uploadImg}/>
-                <img className='adm-edit-img' src={`${cdnUrl}/character/img/${character.anime_id}/${character.id}`}/>
             </div>
             <p>Nome: </p><input value={name} onChange={(e)=>setName(e.target.value)}/><br/>
             <p>Papel: </p><input value={role} onChange={(e)=>setRole(e.target.value)}/><br/>
