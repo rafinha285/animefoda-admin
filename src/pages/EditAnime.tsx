@@ -237,7 +237,7 @@ const EditAnime:React.FC = () => {
     const [epOpF,setEpOpF] = useState<string>("")
     const [epEd,setEpEd] = useState<string>("")
     const [epReleaseData,setEpReleaseData]= useState<Date>(new Date(Date.now()))
-    const [epSeason,setEpSeason] = useState<string>("")
+    const [epSeason,setEpSeason] = useState<string>(seasons[0].id??"")
     const [epReso,setEpReso] = useState<qualityEnum>(qualityEnum.FULLHD)
     const [epAudio,setEpAudio] = useState<languages[]>([languages.Japanese])
     const [epAudioTemp,setEpAudioTemp] = useState<languages>(languages.Japanese);
