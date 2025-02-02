@@ -67,6 +67,7 @@ const EditAnime:React.FC = () => {
                 .then(response=>response.json())
                 .then((s:Season[])=>{
                     setSeasons(s);
+                    setEpSeason(s[0].id??"")
                 })
             await fetch(`${baseUrl}/ani/g/prods/${aniId}`)
                 .then(response=>response.json())
@@ -232,13 +233,15 @@ const EditAnime:React.FC = () => {
 
     const epFileInputRef= useRef<HTMLInputElement>(null)
 
+    const epSeasonRef = useRef<HTMLSelectElement>(null)
+
     const [epName,setEpName] = useState<string>("")
     const [epIndex,setEpIndex]= useState<number>(1)
     const [epOpI,setEpOpI] = useState<string>("")
     const [epOpF,setEpOpF] = useState<string>("")
     const [epEd,setEpEd] = useState<string>("")
     const [epReleaseData,setEpReleaseData]= useState<Date>(new Date(Date.now()))
-    const [epSeason,setEpSeason] = useState<string>(seasons[0].id??"")
+    const [epSeason,setEpSeason] = useState<string>(seasons[0]?.id??"")
     const [epReso,setEpReso] = useState<qualityEnum>(qualityEnum.FULLHD)
     const [epAudio,setEpAudio] = useState<languages[]>([languages.Japanese])
     const [epAudioTemp,setEpAudioTemp] = useState<languages>(languages.Japanese);
@@ -257,6 +260,7 @@ const EditAnime:React.FC = () => {
     }
 
     const uploadEp =async (e:React.MouseEvent)=>{
+        console.log(seasons)
         e.preventDefault()
         let ep ={
             name:epName,
@@ -506,6 +510,7 @@ const EditAnime:React.FC = () => {
                                         <div>
                                             <p>Season: </p>
                                             <select
+                                                ref={epSeasonRef}
                                                 value={epSeason}
                                                 onChange={(e) => setEpSeason(e.target.value)}
                                             >
