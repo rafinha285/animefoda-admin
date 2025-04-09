@@ -4,7 +4,7 @@ import Header from "../components/header/Header";
 import {useParams} from "react-router-dom";
 import {Anime} from "../types/Anime";
 
-import {baseUrl, cdnUrl} from "../const";
+import {apiUrl, baseUrl, cdnUrl} from "../const";
 import {Audio, Gens, languages, quality, qualityEnum, state, weekdayType} from "../types/types";
 import {faArrowUpFromBracket, faPlus, faTrash, faUpload} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
@@ -20,6 +20,8 @@ import {daysOfWeek} from "../functions/dateFunctions";
 import {strTimetoSec} from "../functions/stringFunctions";
 import {Season} from "../types/Season";
 import UploadButton, {UploadButtonType} from "../components/buttons/UploadButton";
+import {ResponseType} from "../types/Response";
+import {type} from "node:os";
 
 const EditAnime:React.FC = () => {
     const {isLogged,isAdmin,isSuper} = useContext(globalContext)!;
@@ -47,35 +49,40 @@ const EditAnime:React.FC = () => {
 
     useEffect(()=>{
         const fetchAni = async()=>{
-            await fetch(`/ani/g/${aniId}`)
+            await fetch(`${apiUrl}/g/anime/${aniId}`)
                 .then(response => response.json())
-                .then((d:Anime)=>{
-                    setAni(d)
-                    console.log(d.state)
-                    setName(d.name)
-                    setName2(d.name2)
-                    setDescription(d.description)
-                    setQualityV(d.quality)
-                    setLanguage(d.language)
-                    setStateV(d.state)
-                    setReleaseDate(new Date(d.releasedate))
-                    setWeekday(d.weekday)
-                    setGens(d.genre)
-                    setVisible(d.visible)
+                .then((d:ResponseType<Anime>)=>{
+                    setAni(d.data)
+                    console.log(d.data.state)
+                    setName(d.data.name)
+                    setName2(d.data.name2)
+                    setDescription(d.data.description)
+                    setQualityV(d.data.quality)
+                    setLanguage(d.data.language)
+                    setStateV(d.data.state)
+                    setReleaseDate(new Date(d.data.releaseDate))
+                    setWeekday(d.data.weekday)
+                    setGens(d.data.genre)
+                    setVisible(d.data.visible)
+                    setSeasons(d.data.seasons)
+                    setProducers(d.data.producers.map(v=>v.name))
+                    setCreators(d.data.creators.map(v=>v.name))
+                    setStudios(d.data.studios.map(v=>v.name))
+                    console.log(d.data.releaseDate, typeof d.data.releaseDate, releaseDate)
                 })
-            await fetch(`${baseUrl}/ani/g/seasons/${aniId}`)
-                .then(response=>response.json())
-                .then((s:Season[])=>{
-                    setSeasons(s);
-                    setEpSeason(s[0].id??"")
-                })
-            await fetch(`${baseUrl}/ani/g/prods/${aniId}`)
-                .then(response=>response.json())
-                .then(r=>{
-                    setProducers(r.producers);
-                    setCreators(r.creators);
-                    setStudios(r.studios);
-                })
+            // await fetch(`${baseUrl}/ani/g/seasons/${aniId}`)
+            //     .then(response=>response.json())
+            //     .then((s:Season[])=>{
+            //         setSeasons(s);
+            //         setEpSeason(s[0].id??"")
+            //     })
+            // await fetch(`${baseUrl}/ani/g/prods/${aniId}`)
+            //     .then(response=>response.json())
+            //     .then(r=>{
+            //         setProducers(r.producers);
+            //         setCreators(r.creators);
+            //         setStudios(r.studios);
+            //     })
         }
         // console.log(Date.prototype)
         if(!isLogged){
@@ -398,9 +405,9 @@ const EditAnime:React.FC = () => {
                                             onClick={(e) => handleAddOption(e, "producers")}>Adicionar <FontAwesomeIcon
                                         icon={faPlus}/></button>
                                     <div className="aniGen">
-                                        {producers?.map((v, i) => (
-                                            <InGenre key={i} optionName={v}
-                                                 onDelete={(e) => handleDeleteOption(e, "producers", v)}/>
+                                        {ani.producers?.map((v, i) => (
+                                            <InGenre key={i} optionName={v.name}
+                                                 onDelete={(e) => handleDeleteOption(e, "producers", v.name)}/>
                                         ))}
                                     </div>
                                 </div>
@@ -410,9 +417,9 @@ const EditAnime:React.FC = () => {
                                     <button className='button'
                                             onClick={(e) => handleAddOption(e, "creators")}>Adicionar <FontAwesomeIcon icon={faPlus}/></button>
                                     <div className='aniGen'>
-                                        {creators?.map((v, i) => (
-                                            <InGenre key={i} optionName={v}
-                                            onDelete={(e) => handleDeleteOption(e, "creators", v)}/>
+                                        {ani.creators?.map((v, i) => (
+                                            <InGenre key={i} optionName={v.name}
+                                            onDelete={(e) => handleDeleteOption(e, "creators", v.name)}/>
                                         ))}
                                     </div>
                                 </div>
@@ -424,9 +431,9 @@ const EditAnime:React.FC = () => {
                                         Adicionar <FontAwesomeIcon icon={faPlus}/>
                                     </button>
                                     <div className='aniGen'>
-                                        {studios?.map((v, i) => (
-                                            <InGenre key={i} optionName={v}
-                                                onDelete={(e)=>handleDeleteOption(e, "studios", v)}/>
+                                        {ani.studios?.map((v, i) => (
+                                            <InGenre key={i} optionName={v.name}
+                                                onDelete={(e)=>handleDeleteOption(e, "studios", v.name)}/>
                                         ))}
                                     </div>
                                 </div>
@@ -445,7 +452,7 @@ const EditAnime:React.FC = () => {
                                         Adicionar <FontAwesomeIcon icon={faPlus}/>
                                     </button>
                                     <div className='aniGen'>
-                                        {seasons?.sort((a,b)=>a.index-b.index).map((v,i)=>(
+                                        {ani.seasons?.sort((a,b)=>a.index-b.index).map((v,i)=>(
                                             <SeasonComponent
                                                 id={v.id}
                                                 name={v.name}

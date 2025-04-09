@@ -6,8 +6,9 @@ import IndexAdminAnime from "../components/index/IndexAdminAnime";
 import {User} from "../types/User";
 import {fetchUser} from "../functions/userFunctions";
 import "../css/index-admin.css"
-import {baseUrl} from "../const";
+import {apiUrl, baseUrl} from "../const";
 import globalContext from "../context/globalContext";
+import {ResponseType} from "../types/Response";
 
 const Home:React.FC = () =>{
     // const [user,setUser] = useState<User>();
@@ -20,11 +21,11 @@ const Home:React.FC = () =>{
             //     .then((data:User)=>{
             //         setUser(data)
             //     })
-            await fetch("/ani/g/all")
+            await fetchUser(`${apiUrl}/g/anime/all`,"GET")
                 .then(response=>response.json())
-                .then((d: { success:boolean,animes:Anime[] })=>{
-                    console.log(d.animes)
-                    setAnimes(d.animes);
+                .then((d: ResponseType<Anime[]>)=>{
+                    console.log(d.data)
+                    setAnimes(d.data);
                 })
         }
         if(!context?.isAdmin){

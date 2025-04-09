@@ -10,7 +10,9 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faRightToBracket} from "@fortawesome/free-solid-svg-icons";
 import "../css/login.css"
 import globalContext from "../context/globalContext";
-import {baseUrl} from "../const";
+import {apiUrl, baseUrl} from "../const";
+import {ResponseType} from "../types/Response";
+import AuthResponse from "../types/AuthResponse";
 
 const Login:FC = () => {
     const context = useContext(globalContext)
@@ -31,7 +33,7 @@ const Login:FC = () => {
             // const publicKey = await fetchPublicKey();
             const userIndentifier = getDeviceIndentifier()
             // const encryptedData = encryptDataWithPublicKey(body)
-            const response = await fetchPost(`/user/p/login`,"POST",{
+            const response = await fetchPost(`${apiUrl}/p/user/login`,"POST",{
                 email,
                 password,
                 recaptchaToken:recaptchaValue,
@@ -42,11 +44,12 @@ const Login:FC = () => {
             })
 
             if(response.ok){
-                const token = (await response.json()).token
+                const token:ResponseType<AuthResponse> = await response.json()
                 // console.log(token,response,response.headers["set-cookie"])
-                setCookie("token",token,{path:"/",maxAge:86400, secure: true})
+                setCookie("token",token.data.accessToken,{path:"/",maxAge:token.data.expiresIn, secure: true})
                 // setCookie('token',token,{path:"/",maxAge:84600})
-                sessionStorage.setItem("token",token)
+                localStorage.setItem("accessToken",token.data.accessToken)
+                localStorage.setItem("refreshToken", token.data.refreshToken)
                 console.log(token)
                 window.location.href = "/home"
             }else{

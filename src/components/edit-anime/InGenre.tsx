@@ -4,7 +4,7 @@ import React from "react";
 import { Producer } from "../../types/types";
 
 interface props{
-    optionName:string|Producer;
+    optionName:Producer|string;
     onDelete:(e:React.MouseEvent<HTMLButtonElement>,optionName:string)=>void;
 }
 

@@ -1,14 +1,17 @@
 import {Episode} from "../types/Episode";
 import {GlobalContextType} from "../context/globalContext";
 import {roles} from "../types/types";
+import {apiUrl} from "../const";
+import {ResponseType} from "../types/Response";
 interface getPrivilegesInterface{
     role:roles[],
     super:boolean
 }
-export async function getPrivileges():Promise<getPrivilegesInterface>{
-    let res= await fetchUser("/user/g/privileges","GET")
-    let response:{success:boolean,role:roles[],super:boolean} = await res.json()
-    return {role:response.role,super:response.super};
+export async function checkAdm():Promise<boolean>{
+    let res= await fetchUser(`${apiUrl}/g/user/check/role/ROLE_ADMIN`,"GET")
+    let response:ResponseType<boolean> = await res.json()
+    return response.data
+    // return {role:response.role,super:response.super};
 }
 export function checkIsLogged(isLogged:boolean){
     if(!isLogged){
@@ -35,6 +38,7 @@ export async function fetchUser(path:string,method:"POST"|"DELETE"|"PATCH"|"GET"
     return await fetch(path,{
         method,
         headers:{
+            'Authorization':`Bearer ${localStorage.getItem("accessToken")}`,
             'Content-Type':contentType,
             'timeZone':indentifier.timeZone,
             'webGlRenderer':indentifier.WegGl?.renderer,

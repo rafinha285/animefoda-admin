@@ -38,9 +38,10 @@ export enum userMangaState{
     plan_to_read="Pretendo ler"
 }
 export enum roles{
-    adm = "adm",
-    client = "client",
-    creator = "creator"
+    ROLE_ADMIN,
+    ROLE_USER,
+    ROLE_DEVELOPER,
+    ROLE_CREATOR
 }
 export enum priorityValue{
     LOW="Baixa",
@@ -109,7 +110,7 @@ export const Gens:string[] = [
     'Yuri',
 ];
 
-export interface Producer{
+export interface Producer {
     id:string;
     name:string;
 }

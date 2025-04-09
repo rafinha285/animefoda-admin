@@ -15,20 +15,5 @@ export interface User{
     birthDate:Date;
     email:string;
     role:roles[]
-    password:string;
-    salt:string;
-    totalanime:number;
-    totalanimewatching:number;
-    totalanimecompleted:number;
-    totalanimeonhold:number;
-    totalanimedropped:number;
-    totalanimeplantowatch:number;
-    totalmanga:number;
-    totalmangareading:number;
-    totalmangacompleted:number;
-    totalmangaonhold:number;
-    totalmangadropped:number;
-    totalmangaplantoread:number;
-    totalanimeliked:string[];
-    totalmangaliked:string[]
+    superuser:boolean;
 }

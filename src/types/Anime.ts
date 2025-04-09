@@ -1,6 +1,7 @@
-import {Audio, state, quality, StateType, userAnimeState, priorityValue, weekdayType, Producer} from "./types"
+import {Audio, state, quality, userAnimeState, priorityValue, weekdayType, Producer} from "./types"
 import { EpisodeUser } from "./Episode";
 import {Season} from "./Season";
+import {Character} from "./Character";
 
 export interface Anime{
     id:string;
@@ -10,17 +11,18 @@ export interface Anime{
 	quality:quality;
 	language:Audio;
 	state:state;
-	releasedate:Date;
+	releaseDate:string;
 	studios:Producer[];
 	producers:Producer[];
 	creators:Producer[];
 	genre:string[];
-	seasons?:Season[];
+	seasons:Season[];
 	rating?:number;
 	averageeptime?:number;
 	date_added?:Date;
 	visible:boolean;
 	weekday?:weekdayType
+    characters:Character[]
 }
 // export class AnimeClass implements Anime{
 // 	id:string;
