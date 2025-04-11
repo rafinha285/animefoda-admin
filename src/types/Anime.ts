@@ -1,4 +1,4 @@
-import {Audio, state, quality, userAnimeState, priorityValue, weekdayType, Producer} from "./types"
+import {Audio, state, quality, userAnimeState, priorityValue, weekdayType, Producer, stateTable} from "./types"
 import { EpisodeUser } from "./Episode";
 import {Season} from "./Season";
 import {Character} from "./Character";
@@ -10,7 +10,7 @@ export interface Anime{
 	description:string;
 	quality:quality;
 	language:Audio;
-	state:state;
+	state:stateTable;
 	releaseDate:string;
 	studios:Producer[];
 	producers:Producer[];

@@ -8,7 +8,9 @@ import {faPlus, faUpload} from "@fortawesome/free-solid-svg-icons";
 import InGenre from "../components/edit-anime/InGenre";
 import {fetchUser, userSendFile} from "../functions/userFunctions";
 import GlobalContext from "../context/globalContext";
-import {baseUrl} from "../const";
+import {apiUrl, baseUrl} from "../const";
+import {ResponseType} from "../types/Response";
+import {Anime} from "../types/Anime";
 
 const NewAnime:React.FC = () =>{
     const context = useContext(GlobalContext);
@@ -31,7 +33,7 @@ const NewAnime:React.FC = () =>{
 
     const [releaseDate,setReleaseDate] = useState<Date>()
     const [qualityV,setQuality] = useState<qualityEnum>(qualityEnum.FULLHD);
-    const [stateV,setState] = useState<state>(state.NOTARING);
+    const [stateV,setState] = useState<state>(state.NOT_ARING);
     const [language,setLanguage] = useState<Audio>(Audio.LEG);
 
 
@@ -54,7 +56,15 @@ const NewAnime:React.FC = () =>{
 
     const handleSubmit =async(e:React.MouseEvent)=>{
         e.preventDefault()
-        await fetchUser("/ani/p/new","POST",{
+        const stateKey = (Object.keys(state) as Array<keyof typeof state>).find(
+            (key) => state[key] === stateV
+        );
+
+        if (!stateKey) {
+            console.error("Chave do estado não encontrada");
+            return;
+        }
+        await fetchUser(`${apiUrl}/p/anime/new`,"POST",{
             name,
             name2,
             description,
@@ -62,18 +72,18 @@ const NewAnime:React.FC = () =>{
             studios,
             creators,
             gens,
-            releasedate:releaseDate,
+            releaseDate,
             quality:qualityV,
-            state:stateV,
+            state:stateKey,
             language,
         }).then(async(res)=>{
             if(res.ok){
-                let ani = await res.json()
+                let ani:ResponseType<Anime> = await res.json()
                 if(img){
                     const formData = new FormData();
                     if(imgInputRef.current && imgInputRef.current.files && imgInputRef.current.files.length>0){
                         formData.append("file", imgInputRef.current.files[0]);
-                        await userSendFile(`/ani/p/img/${ani.id}`,formData);
+                        await userSendFile(`/ani/p/img/${ani.data.id}`,formData);
                     }
                 }
                 }

@@ -5,7 +5,7 @@ import {useParams} from "react-router-dom";
 import {Anime} from "../types/Anime";
 
 import {apiUrl, baseUrl, cdnUrl} from "../const";
-import {Audio, Gens, languages, quality, qualityEnum, state, weekdayType} from "../types/types";
+import {Audio, Gens, languages, Producer, quality, qualityEnum, state, weekdayType} from "../types/types";
 import {faArrowUpFromBracket, faPlus, faTrash, faUpload} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import globalContext from "../context/globalContext";
@@ -52,6 +52,14 @@ const EditAnime:React.FC = () => {
             await fetch(`${apiUrl}/g/anime/${aniId}`)
                 .then(response => response.json())
                 .then((d:ResponseType<Anime>)=>{
+                    if (d.data.state.name in state) {
+                        const stateKey = d.data.state.name as keyof typeof state;
+                        setStateV(state[stateKey]); // Valor correto do enum (ex: "Completo")
+                    } else {
+                        console.error("Chave de estado inválida:", d.data.state.name);
+                        // Trate o erro (ex: definir um valor padrão)
+                        setStateV(state.NOT_ARING);
+                    }
                     setAni(d.data)
                     console.log(d.data.state)
                     setName(d.data.name)
@@ -59,7 +67,7 @@ const EditAnime:React.FC = () => {
                     setDescription(d.data.description)
                     setQualityV(d.data.quality)
                     setLanguage(d.data.language)
-                    setStateV(d.data.state)
+                    // setStateV(state[d.data.state.name])
                     setReleaseDate(new Date(d.data.releaseDate))
                     setWeekday(d.data.weekday)
                     setGens(d.data.genre)
@@ -126,16 +134,23 @@ const EditAnime:React.FC = () => {
         setDeletePopup(false);
     };
 
-    const sendProds = async(prodName:string,type:"producers"|"creators"|"studios") =>{
-        let res:string = await fetchUser(`/ani/p/add/prods/${aniId}/${type}/${prodName}`,"POST")
+    type prods = "producers"|"creators"|"studios"
+
+    const sendProds = async(prodName:string,type:prods) =>{
+        let res:string = await fetchUser(`${apiUrl}/p/${type}/anime/add/${ani?.id}`,"POST",{name:prodName})
             .then(async(res)=> {
                 if(res.ok){
-                    return (await res.json()).result[0].name;
+                    const response:ResponseType<Producer> = await res.json()
+                    return response.data.name;
                 }else{
                     throw res.status
                 }
             })
         return res;
+    }
+
+    const deleteProds = async(prodName:string, type:prods)=>{
+        return await fetchUser(`${apiUrl}/d/${type}/anime/${ani?.id}/${prodName}`,"DELETE")
     }
 
     const handleAddOption = async(e:React.MouseEvent,id:"genre"|"producers"|"creators"|"studios") =>{
@@ -166,25 +181,32 @@ const EditAnime:React.FC = () => {
                 setGens(gens!.filter(v=>v !== value))
                 break
             case "producers":
-                setProducers(producers!.filter(v=>v !== value))
+                deleteProds(value, id).then(()=>{
+                    setProducers(producers!.filter(v=>v !== value))
+                })
                 break
             case "creators":
-                setCreators(creators!.filter(v=>v !== value))
+                deleteProds(value, id).then(()=>{
+                    setCreators(creators!.filter(v=>v !== value))
+                })
                 break
             case "studios":
-                setStudios(studios!.filter(v=>v !== value))
+                deleteProds(value, id).then(()=>{
+                    setStudios(studios!.filter(v=>v !== value))
+                })
                 break
         }
     }
 
     const handleAddSeason = async(e:React.MouseEvent) =>{
         e.preventDefault()
-        await fetchUser(`/ani/season/p/${aniId}`,"POST",{
+        await fetchUser(`${apiUrl}/p/season/new`,"POST",{
             name: (document.getElementById("season_name") as HTMLInputElement).value,
             index: parseInt((document.getElementById("season_index") as HTMLInputElement).value),
+            anime_id:ani?.id
         }).then(async r=>{
-            const res = await r.json()
-            setSeasons([...seasons,res.season])
+            const res:ResponseType<Season> = await r.json()
+            setSeasons([...seasons,res.data])
         })
     }
     const handleDeleteSeason = async(e:React.MouseEvent,id:string)=>{
@@ -195,6 +217,15 @@ const EditAnime:React.FC = () => {
     }
 
     const handleUpdate = async(e:React.MouseEvent)=>{
+        const stateKey = (Object.keys(state) as Array<keyof typeof state>).find(
+            (key) => state[key] === stateV
+        );
+
+        if (!stateKey) {
+            console.error("Chave do estado não encontrada");
+            return;
+        }
+
         e.preventDefault()
         let anime = {
             id:aniId!,
@@ -203,7 +234,7 @@ const EditAnime:React.FC = () => {
             description:description!,
             quality:qualityV!,
             language:language!,
-            state:stateV!,
+            state:stateKey!,
             releasedate:new Date(releaseDate!),
             genre:gens!,
             weekday,
@@ -358,7 +389,7 @@ const EditAnime:React.FC = () => {
                                         ))}
                                     </select>
                                 </div>
-                                {stateV === state.ONGOING?(
+                                {stateV === state.AIRING?(
                                     <div>
                                         <p>Dia de Lançamento da semana:</p>
                                         <select value={weekday} onChange={(e)=> setWeekday(e.target.value as weekdayType)}>

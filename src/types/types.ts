@@ -16,12 +16,16 @@ export enum qualityEnum {
     HD = '720p',
     SD = '480p',
 }
+export interface stateTable{
+    id:number;
+    name:string;
+}
 export enum state{
-    ONGOING="Lançando",
+    AIRING="Lançando",
     HIATUS="Hiáto",
     COMPLETED="Completo",
     CANCELED= "Cancelado",
-    NOTARING= "Não Lançado"
+    NOT_ARING= "Não Lançado"
 }
 export enum userAnimeState{
     watching="Assistindo",
